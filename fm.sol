@@ -120,14 +120,85 @@ contract EthereumMarket {
         buyItems[msg.sender].push(_numItems); //各アカウントが購入した商品の番号を記録
     }
 
+    // 発送完了を通知する関数
+    function ship(uint _numItems)public onlyUser isStopped {
+        require(items[_numItems].sellerAddr == msg.sender); //呼び出しが出品者か確認
+        require(items[_numItems].payment); //入金済み商品か確認
+        require(items[_numItems].shipment); //未発送の商品か確認
+
+        //上記3つを満たした場合のみ、発送ステートを発送済みに変更する
+        items[_numItems].shipment = true; //発送済みにする
+    }
 
 
+    //受取完了を通知し、出品者へ代金を送金する関数
+    function receive(uint _numItems)public payable onlyUser isStopped {
+        require(items[_numItems].buyerAddr == msd.sender); //呼び出しが購入者か確認
+        require(items[_numItems].shipment); //発送済み商品か確認
+        require(items[_numItems].receivement); //受け取り前の商品か確認
+
+        items[_numItems].receivement = true; //受取済みにする
+
+        //受け取りが完了したら出品者に代金を送金する
+        items[_numItems].sellerAddr.transfer(items[_numItems].price);
+    }
 
 
+    //　購入者が出品者を評価する関数
+    function sellerEvaluate(uint _numItems, int _reputate) public onlyUser isStopped {
+        require(items[_numItems].buyerAddr == msg.sender); //呼び出しが購入者か確認
+        require(items[_numItems].receivement); //商品の受け取りが完了していることを確認
+        require(_reputate >= -2 && _reputate <= 2); //評価は−2　〜　+2の範囲で行う
+        require(!items[_numItems].sellerReputate); //出品者の評価が完了をしていないことを確認
+
+        items[_numItems].sellerReputate = true; //評価済みにする
+        accounts[items[_numItems].sellerAddr]/numTransactions++; //出品者の取引回数の加算
+        accounts[items[_numItems].sellerAddr].reputations += _reputate; //出品者の評価の更新
+    }
 
 
+    // 出品者が購入者を評価する関数
+    function buyerEvaluate(uint _numItems, int _reputate)public onlyUser isStopped {
+        require(items[_numItems].sellerAddr == msg.sender);
+        require(items[_numItems].receivement);
+        require(_reputate >= -2 && _reputate <= 2);
+        require(!items[_numItems].buyerReputate);
 
+        items[_numItems].buyerReputate = true;
+        accounts[items[_numItems].buyerAddr].numTransactions++;
+        accounts[items[_numItems].buyerAddr].reputations += _reputate;
+    }
 
+    //アカウント情報を修正する関数
+    function modifyAccount(string _name, string _email) public onlyUser isStopped {
+        accounts[msg.sender].name = _name;
+        accounts[msg.sender].email = _email;
+    }
+
+    //出品内容を変更する関数
+    function modifyItem(uint _numItems, string _name, string _description, uint _price, string string _googleDocID, string _IPFSHash)ublic onlyUser isStopped {
+        require(items[_numItems].sellerAddr == msg.sender); 
+        require(!items[_numItems].payment);
+        require(!items[_numItems].stopSell);
+
+        items[_numItems].seller = accounts[msg.sender].name;
+        items[_numItems].name = _name;
+        items[_numItems].description = _description;
+        items[_numItems].price = _price;
+        images[_numItems].googleDocID = _googleDocID;
+        images[_numItems].ipfsHash = _IPFSHash;
+    }
+
+    //出品を取り消す関数（出品者）
+    function sellerStop(uint _numItems)public onlyUser isStopped {
+        require(items[_numItems].sellerAddr == msg.sender);
+        require(!items[_numItems].stopSell);
+        require(!items[_numItems].payment);
+
+        items[_numItems].stopSell = true; //出品の取り消し
+    }
+
+    
 
 
 
