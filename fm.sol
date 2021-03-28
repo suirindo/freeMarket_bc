@@ -127,7 +127,7 @@ contract EthereumMarket {
     function ship(uint _numItems)public onlyUser isStopped {
         require(items[_numItems].sellerAddr == msg.sender); //呼び出しが出品者か確認
         require(items[_numItems].payment); //入金済み商品か確認
-        require(items[_numItems].shipment); //未発送の商品か確認
+        require(!items[_numItems].shipment); //未発送の商品か確認
 
         //上記3つを満たした場合のみ、発送ステートを発送済みに変更する
         items[_numItems].shipment = true; //発送済みにする
@@ -138,7 +138,7 @@ contract EthereumMarket {
     function receive(uint _numItems)public payable onlyUser isStopped {
         require(items[_numItems].buyerAddr == msg.sender); //呼び出しが購入者か確認
         require(items[_numItems].shipment); //発送済み商品か確認
-        require(items[_numItems].receivement); //受け取り前の商品か確認
+        require(!items[_numItems].receivement); //受け取り前の商品か確認
 
         items[_numItems].receivement = true; //受取済みにする
 
