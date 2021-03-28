@@ -1,1 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>EthereumMarket</title>
+  <!--bootstrapの読込み-->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+  <!--web3jsの読込み-->
+  <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.36/dist/web3.min.js" integrity="sha256-nWBTbvxhJgjslRyuAKJHK+XcZPlCnmIAAMixz6EefVk=" crossorigin="anonymous"></script>
+  <!--自作のjavascriptの読込み-->
+  <script language="javascript" type="text/javascript" src="../js/EthereumMarketABI.js"></script>
+  <script type="text/javascript" src="../js/check.js"></script>
+  <script type="text/javascript" src="../js/sell.js"></script>
+</head>
 
+<header>
+  <!--ヘッダーにナビゲーションバーを配置する-->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="main.html">EthereumMarket</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="navbar-collapse collapse" id="navbarColor01">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="main.html">ホーム<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item active">
+        <a class="nav-link" href="sell.html">出品する</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="register.html">会員登録</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="account.html">会員情報検索</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</header>
+
+<body>
+  <p class="text-danger" style="text-align:center">※これはデモです。本当に売買はできません。このスマートコントラクトはRopstenテストネットワークで動作しています。</p>
+  <div class="col-md-6">
+    <!--商品情報を入力するテキストボックスを配置する-->
+    <div class="form-group">
+      <label for="itemName">商品名を入力して下さい。</label>
+      <input type="text" class="form-control" id="itemName" placeholder="">
+    </div>
+    <div class="form-group">
+      <label for="description">商品説明を入力して下さい。</label>
+      <textarea class="form-control" id="description" rows="3"></textarea>
+    </div>
+    <div class="form-group">
+      <label for="price">商品価格（wei）を入力して下さい。</label>
+      <input type="number" class="form-control" id="price" placeholder="">
+    </div>
+    <div class="form-group">
+      <label for="googleDocID">Googleドライブにアップロードした商品画像のファイルIDを入力して下さい。</label>
+      <input type="text" class="form-control" id="googleDocID" placeholder="">
+    </div>
+    <!--出品するコントラクトを呼び出すボタンを配置する-->
+    <p><button onclick="sell()" class="btn btn-default">出品</button></p>
+  </div>
+</body>
+</html>
